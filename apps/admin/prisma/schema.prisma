@@ -374,3 +374,111 @@ model Banner {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+
+enum ProductSeries {
+  iphone
+  ipad
+  mac
+  watch
+  airpods
+  accessories
+}
+
+enum DeliveryType {
+  CDEK_PVZ
+  CDEK_COURIER
+  EKB_COURIER
+  EKB_PICKUP
+}
+
+enum PaymentType {
+  CASH
+  TRANSFER
+  INVOICE
+}
+
+enum InquiryStatus {
+  NEW
+  IN_PROGRESS
+  CONFIRMED
+  CANCELLED
+  NEED_INFO
+}
+
+enum InquiryType {
+  ORDER
+  TRADEIN
+  INSTALLMENT
+  SERVICE
+  B2B
+}
+
+model Page {
+  id             String @id @default(cuid())
+  slug           String @unique
+  title          String
+  contentHtml    String?
+  seoTitle       String?
+  seoDescription String?
+  isActive       Boolean @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Collection {
+  id            String @id @default(cuid())
+  slug          String @unique
+  title         String
+  series        ProductSeries
+  filterJson    Json
+
+  seoTitle       String?
+  seoDescription String?
+  contentHtml    String?
+  isActive       Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Shop {
+  id       String @id @default(cuid())
+  title    String
+  address  String
+  hours    String?
+  phone    String?
+  mapLink  String?
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Inquiry {
+  id     String @id @default(cuid())
+  number Int @unique @default(autoincrement())
+
+  type   InquiryType @default(ORDER)
+  status InquiryStatus @default(NEW)
+
+  itemsJson Json
+
+  customerName  String
+  customerPhone String
+  customerEmail String?
+
+  deliveryType DeliveryType
+  deliveryData Json
+
+  paymentType    PaymentType
+  invoiceDetails Json?
+
+  managerNote String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([customerPhone])
+}
